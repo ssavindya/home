@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sinhala & Tamil New Year Card</title>
+  <style>
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: radial-gradient(circle at top left, #f7e8c9, #f0c67a 40%, #d2502f 100%);
+      font-family: 'Segoe UI', Tahoma, sans-serif;
+    }
+
+    .card {
+      position: relative;
+      overflow: hidden;
+      width: min(100%, 520px);
+      padding: 32px;
+      border-radius: 28px;
+      box-shadow: 0 24px 60px rgba(17, 24, 39, 0.18);
+      background: linear-gradient(180deg, rgba(255,255,255,0.92), rgba(255,255,255,0.82));
+      border: 1px solid rgba(255, 255, 255, 0.65);
+      text-align: center;
+    }
+
+    .card > *:not(.firework-overlay) {
+      position: relative;
+      z-index: 1;
+    }
+
+    .ribbon {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 18px;
+      margin-bottom: 10px;
+      border-radius: 999px;
+      background: rgba(210, 95, 45, 0.12);
+      color: #982b1b;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .title {
+      margin: 0;
+      font-size: clamp(2rem, 5vw, 3.25rem);
+      line-height: 1.05;
+      color: #c92a2a;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      text-shadow:
+        0 2px 0 rgba(0, 0, 0, 0.08),
+        0 10px 30px rgba(201, 42, 42, 0.28);
+      font-family: 'Segoe UI', Tahoma, sans-serif;
+      position: relative;
+      display: inline-block;
+    }
+
+    .title::after {
+      content: '';
+      position: absolute;
+      left: 50%;
+      bottom: -8px;
+      width: 120%;
+      height: 8px;
+      background: radial-gradient(circle, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0));
+      transform: translateX(-50%);
+      filter: blur(4px);
+      opacity: 0.7;
+    }
+
+    .subtitle {
+      margin: 14px auto 24px;
+      font-size: 1.1rem;
+      color: #5b4434;
+      max-width: 420px;
+      line-height: 1.7;
+    }
+
+    .clip-art {
+      position: relative;
+      margin: 14px auto 6px;
+      width: 100%;
+      max-width: 340px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      flex-direction: column;
+      z-index: 1;
+    }
+
+    .firework-overlay {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .firework-overlay svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .firework-button {
+      padding: 14px 24px;
+      border-radius: 999px;
+      border: none;
+      background: linear-gradient(135deg, #f0932b, #eb4d4b);
+      color: #fff;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 16px 28px rgba(235, 77, 75, 0.2);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      position: relative;
+      z-index: 2;
+    }
+
+    .firework-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 18px 30px rgba(235, 77, 75, 0.3);
+    }
+
+    .firework-button:active,
+    .firework-button:disabled {
+      transform: translateY(0);
+      opacity: 0.92;
+    }
+
+    .burst line {
+      stroke-linecap: round;
+      stroke-width: 3;
+      opacity: 0;
+      transform-origin: 0 0;
+      stroke-dasharray: 20 10;
+      stroke-dashoffset: 30;
+    }
+
+    .burst circle {
+      fill: #fff;
+      opacity: 0;
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      background: radial-gradient(circle at 30% 20%, rgba(255, 205, 116, 0.24), transparent 18%),
+                  radial-gradient(circle at 70% 18%, rgba(255, 105, 105, 0.18), transparent 16%),
+                  radial-gradient(circle at 50% 48%, rgba(255, 255, 255, 0.18), transparent 30%);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease;
+    }
+
+    .card.active::before {
+      opacity: 1;
+      animation: glow-burst 3s ease-out forwards;
+    }
+
+    .card.active .burst line {
+      animation: burst-lines 3s cubic-bezier(0.15, 0.65, 0.33, 1) forwards;
+    }
+
+    .card.active .burst circle {
+      animation: burst-center 3s ease-out forwards;
+    }
+
+    .burst-1 line {
+      stroke: #ffd15c;
+      animation-delay: 0s;
+    }
+
+    .burst-2 line {
+      stroke: #ff6b6b;
+      animation-delay: 0.15s;
+    }
+
+    .burst-3 line {
+      stroke: #72e4c8;
+      animation-delay: 0.3s;
+    }
+
+    .burst-1 circle {
+      animation-delay: 0.1s;
+    }
+
+    .burst-2 circle {
+      animation-delay: 0.25s;
+    }
+
+    .burst-3 circle {
+      animation-delay: 0.4s;
+    }
+
+    .burst-4 line {
+      stroke: #a85cff;
+      animation-delay: 0.45s;
+    }
+
+    .burst-5 line {
+      stroke: #4dd0ff;
+      animation-delay: 0.55s;
+    }
+
+    .burst-6 line {
+      stroke: #ff77a9;
+      animation-delay: 0.65s;
+    }
+
+    .burst-4 circle {
+      animation-delay: 0.5s;
+    }
+
+    .burst-5 circle {
+      animation-delay: 0.65s;
+    }
+
+    .burst-6 circle {
+      animation-delay: 0.8s;
+    }
+
+    .burst-7 line {
+      stroke: #ffc048;
+      animation-delay: 0.9s;
+    }
+
+    .burst-8 line {
+      stroke: #7c5cff;
+      animation-delay: 1s;
+    }
+
+    .burst-9 line {
+      stroke: #ffffff;
+      animation-delay: 0.2s;
+    }
+
+    .burst-10 line {
+      stroke: #ffd8e0;
+      animation-delay: 0.35s;
+    }
+
+    .burst-11 line {
+      stroke: #fff3a5;
+      animation-delay: 0.5s;
+    }
+
+    .burst-12 line {
+      stroke: #8ee7ff;
+      animation-delay: 0.65s;
+    }
+
+    .burst-13 line {
+      stroke: #ff8c42;
+      animation-delay: 0.25s;
+    }
+
+    .burst-14 line {
+      stroke: #c48cff;
+      animation-delay: 0.42s;
+    }
+
+    .burst-15 line {
+      stroke: #60ffdb;
+      animation-delay: 0.55s;
+    }
+
+    .burst-16 line {
+      stroke: #ffe987;
+      animation-delay: 0.7s;
+    }
+
+    .burst-17 line {
+      stroke: #ff91c7;
+      animation-delay: 0.85s;
+    }
+
+    .burst-18 line {
+      stroke: #8fe6ff;
+      animation-delay: 1.05s;
+    }
+
+    .burst-7 circle {
+      animation-delay: 0.95s;
+    }
+
+    .burst-8 circle {
+      animation-delay: 1.05s;
+    }
+
+    .burst-9 circle {
+      animation-delay: 0.25s;
+    }
+
+    .burst-10 circle {
+      animation-delay: 0.4s;
+    }
+
+    .burst-11 circle {
+      animation-delay: 0.55s;
+    }
+
+    .burst-12 circle {
+      animation-delay: 0.7s;
+    }
+
+    .burst-13 circle {
+      animation-delay: 0.3s;
+    }
+
+    .burst-14 circle {
+      animation-delay: 0.45s;
+    }
+
+    .burst-15 circle {
+      animation-delay: 0.6s;
+    }
+
+    .burst-16 circle {
+      animation-delay: 0.75s;
+    }
+
+    .burst-17 circle {
+      animation-delay: 0.9s;
+    }
+
+    .burst-18 circle {
+      animation-delay: 1.1s;
+    }
+
+    .burst-9 line,
+    .burst-10 line,
+    .burst-11 line,
+    .burst-12 line,
+    .burst-13 line,
+    .burst-14 line,
+    .burst-15 line,
+    .burst-16 line,
+    .burst-17 line,
+    .burst-18 line {
+      stroke-width: 2;
+    }
+
+    .burst-9 circle,
+    .burst-10 circle,
+    .burst-11 circle,
+    .burst-12 circle,
+    .burst-13 circle,
+    .burst-14 circle,
+    .burst-15 circle,
+    .burst-16 circle,
+    .burst-17 circle,
+    .burst-18 circle {
+      r: 3;
+    }
+
+    .sparkle {
+      fill: #fff;
+      opacity: 0;
+      transform-origin: center;
+    }
+
+    .sparkle-1 { animation-delay: 0.18s; }
+    .sparkle-2 { animation-delay: 0.26s; }
+    .sparkle-3 { animation-delay: 0.34s; }
+    .sparkle-4 { animation-delay: 0.42s; }
+    .sparkle-5 { animation-delay: 0.5s; }
+    .sparkle-6 { animation-delay: 0.58s; }
+    .sparkle-7 { animation-delay: 0.66s; }
+    .sparkle-8 { animation-delay: 0.74s; }
+    .sparkle-9 { animation-delay: 0.88s; }
+    .sparkle-10 { animation-delay: 1s; }
+
+    .card.active .sparkle {
+      opacity: 1;
+      animation: sparkle 1.4s ease-out forwards;
+      animation-play-state: running;
+    }
+
+    @keyframes burst-lines {
+      0% { opacity: 0; transform: scale(0.15) rotate(0deg); }
+      20% { opacity: 1; transform: scale(1) rotate(6deg); }
+      45% { opacity: 0.9; transform: scale(1.05) rotate(-4deg); }
+      70% { opacity: 0.6; transform: scale(1.08) rotate(3deg); }
+      100% { opacity: 0; transform: scale(1.16) rotate(1deg); }
+    }
+
+    @keyframes sparkle {
+      0% { opacity: 0; transform: scale(0.2); }
+      20% { opacity: 1; transform: scale(1.05); }
+      50% { opacity: 0.9; transform: scale(1); }
+      100% { opacity: 0; transform: scale(0.6); }
+    }
+
+    @keyframes glow-burst {
+      0% { opacity: 0; transform: scale(0.95); }
+      40% { opacity: 1; transform: scale(1.02); }
+      100% { opacity: 0; transform: scale(1.08); }
+    }
+
+    @keyframes burst-center {
+      0% { opacity: 0; transform: scale(0); }
+      50% { opacity: 1; transform: scale(1.2); }
+      100% { opacity: 0; transform: scale(0.25); }
+    }
+
+    .greetings {
+      display: grid;
+      gap: 16px;
+      margin-top: 20px;
+    }
+
+    .greeting {
+      padding: 18px 20px;
+      border-radius: 20px;
+      background: linear-gradient(135deg, #fff7ee, #ffe4c5);
+      border: 1px solid rgba(219, 115, 57, 0.18);
+      color: #6c3f28;
+      font-size: 1rem;
+      line-height: 1.6;
+    }
+
+    .greeting span {
+      display: block;
+      margin-top: 8px;
+      font-weight: 600;
+      color: #a3451d;
+    }
+
+    .footer {
+      margin-top: 28px;
+      font-size: 0.95rem;
+      color: #7a5b45;
+    }
+  </style>
+</head>
+<body>
+  <article class="card">
+    <div class="firework-overlay" aria-hidden="true">
+      <svg viewBox="0 0 520 420" aria-hidden="true" role="img">
+        <defs>
+          <filter id="glow" x="-40%" y="-40%" width="180%" height="180%">
+            <feGaussianBlur stdDeviation="4" result="coloredBlur" />
+            <feMerge>
+              <feMergeNode in="coloredBlur" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
+        </defs>
+        <g class="burst burst-1" transform="translate(90 80)">
+          <circle cx="0" cy="0" r="5" filter="url(#glow)" />
+          <line x1="0" y1="0" x2="0" y2="-60" stroke-width="3" />
+          <line x1="0" y1="0" x2="40" y2="-40" stroke-width="3" />
+          <line x1="0" y1="0" x2="60" y2="0" stroke-width="3" />
+          <line x1="0" y1="0" x2="40" y2="40" stroke-width="3" />
+          <line x1="0" y1="0" x2="0" y2="60" stroke-width="3" />
+          <line x1="0" y1="0" x2="-40" y2="40" stroke-width="3" />
+          <line x1="0" y1="0" x2="-60" y2="0" stroke-width="3" />
+          <line x1="0" y1="0" x2="-40" y2="-40" stroke-width="3" />
+        </g>
+        <g class="burst burst-2" transform="translate(420 70)">
+          <circle cx="0" cy="0" r="5" filter="url(#glow)" />
+          <line x1="0" y1="0" x2="0" y2="-68" stroke-width="3" />
+          <line x1="0" y1="0" x2="42" y2="-42" stroke-width="3" />
+          <line x1="0" y1="0" x2="68" y2="0" stroke-width="3" />
+          <line x1="0" y1="0" x2="42" y2="42" stroke-width="3" />
+          <line x1="0" y1="0" x2="0" y2="68" stroke-width="3" />
+          <line x1="0" y1="0" x2="-42" y2="42" stroke-width="3" />
+          <line x1="0" y1="0" x2="-68" y2="0" stroke-width="3" />
+          <line x1="0" y1="0" x2="-42" y2="-42" stroke-width="3" />
+        </g>
+        <g class="burst burst-3" transform="translate(260 110)">
+          <circle cx="0" cy="0" r="5" filter="url(#glow)" />
+          <line x1="0" y1="0" x2="0" y2="-58" stroke-width="3" />
+          <line x1="0" y1="0" x2="38" y2="-38" stroke-width="3" />
+          <line x1="0" y1="0" x2="58" y2="0" stroke-width="3" />
+          <line x1="0" y1="0" x2="38" y2="38" stroke-width="3" />
+          <line x1="0" y1="0" x2="0" y2="58" stroke-width="3" />
+          <line x1="0" y1="0" x2="-38" y2="38" stroke-width="3" />
+          <line x1="0" y1="0" x2="-58" y2="0" stroke-width="3" />
+          <line x1="0" y1="0" x2="-38" y2="-38" stroke-width="3" />
+        </g>
+        <g class="burst burst-4" transform="translate(120 260)">
+          <circle cx="0" cy="0" r="5" filter="url(#glow)" />
+          <line x1="0" y1="0" x2="0" y2="-48" stroke-width="3" />
+          <line x1="0" y1="0" x2="32" y2="-32" stroke-width="3" />
+          <line x1="0" y1="0" x2="48" y2="0" stroke-width="3" />
+          <line x1="0" y1="0" x2="32" y2="32" stroke-width="3" />
+          <line x1="0" y1="0" x2="0" y2="48" stroke-width="3" />
+          <line x1="0" y1="0" x2="-32" y2="32" stroke-width="3" />
+          <line x1="0" y1="0" x2="-48" y2="0" stroke-width="3" />
+          <line x1="0" y1="0" x2="-32" y2="-32" stroke-width="3" />
+        </g>
+        <g class="burst burst-5" transform="translate(350 220)">
+          <circle cx="0" cy="0" r="5" filter="url(#glow)" />
+          <line x1="0" y1="0" x2="0" y2="-62" stroke-width="3" />
+          <line x1="0" y1="0" x2="36" y2="-36" stroke-width="3" />
+          <line x1="0" y1="0" x2="62" y2="0" stroke-width="3" />
+          <line x1="0" y1="0" x2="36" y2="36" stroke-width="3" />
+          <line x1="0" y1="0" x2="0" y2="62" stroke-width="3" />
+          <line x1="0" y1="0" x2="-36" y2="36" stroke-width="3" />
+          <line x1="0" y1="0" x2="-62" y2="0" stroke-width="3" />
+          <line x1="0" y1="0" x2="-36" y2="-36" stroke-width="3" />
+        </g>
+        <g class="burst burst-6" transform="translate(460 320)">
+          <circle cx="0" cy="0" r="5" filter="url(#glow)" />
+          <line x1="0" y1="0" x2="0" y2="-42" stroke-width="3" />
+          <line x1="0" y1="0" x2="28" y2="-28" stroke-width="3" />
+          <line x1="0" y1="0" x2="42" y2="0" stroke-width="3" />
+          <line x1="0" y1="0" x2="28" y2="28" stroke-width="3" />
+          <line x1="0" y1="0" x2="0" y2="42" stroke-width="3" />
+          <line x1="0" y1="0" x2="-28" y2="28" stroke-width="3" />
+          <line x1="0" y1="0" x2="-42" y2="0" stroke-width="3" />
+          <line x1="0" y1="0" x2="-28" y2="-28" stroke-width="3" />
+        </g>
+        <g class="burst burst-7" transform="translate(210 340)">
+          <circle cx="0" cy="0" r="5" filter="url(#glow)" />
+          <line x1="0" y1="0" x2="0" y2="-54" stroke-width="3" />
+          <line x1="0" y1="0" x2="34" y2="-34" stroke-width="3" />
+          <line x1="0" y1="0" x2="54" y2="0" stroke-width="3" />
+          <line x1="0" y1="0" x2="34" y2="34" stroke-width="3" />
+          <line x1="0" y1="0" x2="0" y2="54" stroke-width="3" />
+          <line x1="0" y1="0" x2="-34" y2="34" stroke-width="3" />
+          <line x1="0" y1="0" x2="-54" y2="0" stroke-width="3" />
+          <line x1="0" y1="0" x2="-34" y2="-34" stroke-width="3" />
+        </g>
+        <g class="burst burst-8" transform="translate(310 150)">
+          <circle cx="0" cy="0" r="5" filter="url(#glow)" />
+          <line x1="0" y1="0" x2="0" y2="-46" stroke-width="3" />
+          <line x1="0" y1="0" x2="30" y2="-30" stroke-width="3" />
+          <line x1="0" y1="0" x2="46" y2="0" stroke-width="3" />
+          <line x1="0" y1="0" x2="30" y2="30" stroke-width="3" />
+          <line x1="0" y1="0" x2="0" y2="46" stroke-width="3" />
+          <line x1="0" y1="0" x2="-30" y2="30" stroke-width="3" />
+          <line x1="0" y1="0" x2="-46" y2="0" stroke-width="3" />
+          <line x1="0" y1="0" x2="-30" y2="-30" stroke-width="3" />
+        </g>
+        <g class="burst burst-9" transform="translate(130 50)">
+          <circle cx="0" cy="0" r="3" filter="url(#glow)" />
+          <line x1="0" y1="0" x2="0" y2="-26" />
+          <line x1="0" y1="0" x2="22" y2="-22" />
+          <line x1="0" y1="0" x2="26" y2="0" />
+          <line x1="0" y1="0" x2="22" y2="22" />
+          <line x1="0" y1="0" x2="0" y2="26" />
+          <line x1="0" y1="0" x2="-22" y2="22" />
+          <line x1="0" y1="0" x2="-26" y2="0" />
+          <line x1="0" y1="0" x2="-22" y2="-22" />
+        </g>
+        <g class="burst burst-10" transform="translate(280 30)">
+          <circle cx="0" cy="0" r="3" filter="url(#glow)" />
+          <line x1="0" y1="0" x2="0" y2="-24" />
+          <line x1="0" y1="0" x2="20" y2="-20" />
+          <line x1="0" y1="0" x2="24" y2="0" />
+          <line x1="0" y1="0" x2="20" y2="20" />
+          <line x1="0" y1="0" x2="0" y2="24" />
+          <line x1="0" y1="0" x2="-20" y2="20" />
+          <line x1="0" y1="0" x2="-24" y2="0" />
+          <line x1="0" y1="0" x2="-20" y2="-20" />
+        </g>
+        <g class="burst burst-11" transform="translate(390 240)">
+          <circle cx="0" cy="0" r="3" filter="url(#glow)" />
+          <line x1="0" y1="0" x2="0" y2="-28" />
+          <line x1="0" y1="0" x2="24" y2="-24" />
+          <line x1="0" y1="0" x2="28" y2="0" />
+          <line x1="0" y1="0" x2="24" y2="24" />
+          <line x1="0" y1="0" x2="0" y2="28" />
+          <line x1="0" y1="0" x2="-24" y2="24" />
+          <line x1="0" y1="0" x2="-28" y2="0" />
+          <line x1="0" y1="0" x2="-24" y2="-24" />
+        </g>
+        <g class="burst burst-12" transform="translate(430 90)">
+          <circle cx="0" cy="0" r="3" filter="url(#glow)" />
+          <line x1="0" y1="0" x2="0" y2="-22" />
+          <line x1="0" y1="0" x2="18" y2="-18" />
+          <line x1="0" y1="0" x2="22" y2="0" />
+          <line x1="0" y1="0" x2="18" y2="18" />
+          <line x1="0" y1="0" x2="0" y2="22" />
+          <line x1="0" y1="0" x2="-18" y2="18" />
+          <line x1="0" y1="0" x2="-22" y2="0" />
+          <line x1="0" y1="0" x2="-18" y2="-18" />
+        </g>
+        <g class="burst burst-13" transform="translate(220 180)">
+          <circle cx="0" cy="0" r="3" filter="url(#glow)" />
+          <line x1="0" y1="0" x2="0" y2="-30" />
+          <line x1="0" y1="0" x2="24" y2="-24" />
+          <line x1="0" y1="0" x2="30" y2="0" />
+          <line x1="0" y1="0" x2="24" y2="24" />
+          <line x1="0" y1="0" x2="0" y2="30" />
+          <line x1="0" y1="0" x2="-24" y2="24" />
+          <line x1="0" y1="0" x2="-30" y2="0" />
+          <line x1="0" y1="0" x2="-24" y2="-24" />
+        </g>
+        <g class="burst burst-14" transform="translate(410 40)">
+          <circle cx="0" cy="0" r="3" filter="url(#glow)" />
+          <line x1="0" y1="0" x2="0" y2="-26" />
+          <line x1="0" y1="0" x2="22" y2="-22" />
+          <line x1="0" y1="0" x2="26" y2="0" />
+          <line x1="0" y1="0" x2="22" y2="22" />
+          <line x1="0" y1="0" x2="0" y2="26" />
+          <line x1="0" y1="0" x2="-22" y2="22" />
+          <line x1="0" y1="0" x2="-26" y2="0" />
+          <line x1="0" y1="0" x2="-22" y2="-22" />
+        </g>
+        <g class="burst burst-15" transform="translate(360 320)">
+          <circle cx="0" cy="0" r="3" filter="url(#glow)" />
+          <line x1="0" y1="0" x2="0" y2="-28" />
+          <line x1="0" y1="0" x2="24" y2="-24" />
+          <line x1="0" y1="0" x2="28" y2="0" />
+          <line x1="0" y1="0" x2="24" y2="24" />
+          <line x1="0" y1="0" x2="0" y2="28" />
+          <line x1="0" y1="0" x2="-24" y2="24" />
+          <line x1="0" y1="0" x2="-28" y2="0" />
+          <line x1="0" y1="0" x2="-24" y2="-24" />
+        </g>
+        <g class="burst burst-16" transform="translate(80 120)">
+          <circle cx="0" cy="0" r="3" filter="url(#glow)" />
+          <line x1="0" y1="0" x2="0" y2="-24" />
+          <line x1="0" y1="0" x2="20" y2="-20" />
+          <line x1="0" y1="0" x2="24" y2="0" />
+          <line x1="0" y1="0" x2="20" y2="20" />
+          <line x1="0" y1="0" x2="0" y2="24" />
+          <line x1="0" y1="0" x2="-20" y2="24" />
+          <line x1="0" y1="0" x2="-24" y2="0" />
+          <line x1="0" y1="0" x2="-20" y2="-20" />
+        </g>
+        <g class="burst burst-17" transform="translate(320 250)">
+          <circle cx="0" cy="0" r="3" filter="url(#glow)" />
+          <line x1="0" y1="0" x2="0" y2="-26" />
+          <line x1="0" y1="0" x2="22" y2="-22" />
+          <line x1="0" y1="0" x2="26" y2="0" />
+          <line x1="0" y1="0" x2="22" y2="22" />
+          <line x1="0" y1="0" x2="0" y2="26" />
+          <line x1="0" y1="0" x2="-22" y2="22" />
+          <line x1="0" y1="0" x2="-26" y2="0" />
+          <line x1="0" y1="0" x2="-22" y2="-22" />
+        </g>
+        <g class="burst burst-18" transform="translate(450 170)">
+          <circle cx="0" cy="0" r="3" filter="url(#glow)" />
+          <line x1="0" y1="0" x2="0" y2="-24" />
+          <line x1="0" y1="0" x2="20" y2="-20" />
+          <line x1="0" y1="0" x2="24" y2="0" />
+          <line x1="0" y1="0" x2="20" y2="20" />
+          <line x1="0" y1="0" x2="0" y2="24" />
+          <line x1="0" y1="0" x2="-20" y2="24" />
+          <line x1="0" y1="0" x2="-24" y2="0" />
+          <line x1="0" y1="0" x2="-20" y2="-20" />
+        </g>
+        <circle class="sparkle sparkle-1" cx="60" cy="20" r="2" />
+        <circle class="sparkle sparkle-2" cx="190" cy="60" r="2" />
+        <circle class="sparkle sparkle-3" cx="360" cy="110" r="2" />
+        <circle class="sparkle sparkle-4" cx="80" cy="190" r="2" />
+        <circle class="sparkle sparkle-5" cx="250" cy="35" r="2" />
+        <circle class="sparkle sparkle-6" cx="455" cy="80" r="2" />
+        <circle class="sparkle sparkle-7" cx="300" cy="310" r="2" />
+        <circle class="sparkle sparkle-8" cx="145" cy="280" r="2" />
+        <circle class="sparkle sparkle-9" cx="220" cy="220" r="2" />
+        <circle class="sparkle sparkle-10" cx="420" cy="210" r="2" />
+      </svg>
+    </div>
+
+    <div class="ribbon">Sinhala & Tamil New Year</div>
+
+    <div class="clip-art" id="clipArt">
+      <button class="firework-button" id="launchBtn">Press It</button>
+    </div>
+
+    <h1 class="title">Sinhala & Tamil New Year</h1>
+    <p class="subtitle">May this festive season bring joy, prosperity, and bright new beginnings.</p>
+
+    <section class="greetings">
+      <div class="greeting">
+        <strong>සිංහල අලුත් අවුරුද්දට සුබ පැතුම්</strong>
+        <span>May your year be blessed with peace, fortune, and new beginnings.</span>
+      </div>
+      <div class="greeting">
+        <strong>தமிழ்புத்தாண்டு வாழ்த்துக்கள்</strong>
+        <span>May the harvest of joy and success grow abundantly in your life.</span>
+      </div>
+    </section>
+
+    <p class="footer">Celebrate with family, share traditional treats, and welcome the new year with hope.</p>
+  </article>
+  <script>
+    const launchBtn = document.getElementById('launchBtn');
+    const card = document.querySelector('.card');
+
+    launchBtn.addEventListener('click', () => {
+      card.classList.add('active');
+      launchBtn.disabled = true;
+      launchBtn.textContent = 'Enjoy the show!';
+
+      setTimeout(() => {
+        card.classList.remove('active');
+        launchBtn.disabled = false;
+        launchBtn.textContent = 'Press It';
+      }, 3800);
+    });
+  </script>
+</body>
+</html>
